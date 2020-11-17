@@ -25,7 +25,7 @@ if __name__ == "__main__":
             df.sum_power.plot(
                 ax=axes[2], grid='both', title='Sum Power', ylabel='[W]', xlabel='Time', color='b')
 
-            plt.savefig(sys.argv[1].split('.')[0] + '.png')
+            plt.savefig(sys.argv[1].split('.csv')[0] + '.png')
             plt.show()
         except Exception as e:
             print(e)

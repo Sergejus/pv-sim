@@ -89,13 +89,13 @@ pip3 install -r requirements.txt
 Run `pv_simulator` consumer. It will start and wait for meter values. 
 
 ```bash
-python3 ./pv/pv_simulator.py -s localhost -p 5672 -o ./data/results.csv
+python3 pv/pv_simulator.py -s localhost -p 5672 -o data/results.csv
 ```
 
 Run `meter` producer to start the simulation.
 
 ```bash
-python3 ./meter/meter.py -s localhost -p 5672
+python3 meter/meter.py -s localhost -p 5672
 ```
 
 You can add `-d` option to both `pv_simulator` and/or `meter` to see debug messages.
@@ -118,10 +118,10 @@ pip3 install matplotlib pandas
 To plot the results run the following:
 
 ```bash
-python3 ./data/plot_results.py ./data/results.csv
+python3 data/plot_results.py data/results.csv
 ```
 
-This will produce `./data/results.png` and show an interactive plot.
+This will produce `data/results.png` and show an interactive plot.
 
 If the plot does not appear, try to install PyQt5 for matplotlib:
 
