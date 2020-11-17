@@ -30,9 +30,9 @@ logger.addHandler(ch)
 
 
 # Simulation time constants hours from midnight
-SUNRISE_TIME = 5.4 
-# time point where power curve changes from linear to quadratic 
-MORNING_POINT = 8  
+SUNRISE_TIME = 5.4
+# time point where power curve changes from linear to quadratic
+MORNING_POINT = 8
 # time point where power curve changes from quadratic back to linear before sunset
 EVENING_POINT = 20
 SUNSET_TIME = 20.8
@@ -50,7 +50,8 @@ class PVSimulator(object):
         self.channel = connection.channel()
         self.channel.queue_declare(queue="meter")
 
-        logger.info(f"PV Simulator consumer connected to RabbitMQ broker {host=}, {port=}")
+        logger.info(
+            f"PV Simulator consumer connected to RabbitMQ broker {host=}, {port=}")
 
         self.filename = output_filename
 
@@ -91,11 +92,17 @@ class PVSimulator(object):
 
     def run(self):
         # Run PV simulator
-        self.channel.basic_consume(
+        try:
+            self.channel.basic_consume(
             queue="meter", on_message_callback=self.callback, auto_ack=True)
 
-        logger.debug("Waiting for meter values...")
-        self.channel.start_consuming()
+            logger.debug("Waiting for meter values...")
+            self.channel.start_consuming()
+        except KeyboardInterrupt:
+            logger.info("Interrupted by user")
+        finally:
+            self.channel.close()
+        
 
     def get_pv_power(self, timestamp):
         # Function to generate the PV power value from the timestamp as input
@@ -112,7 +119,7 @@ class PVSimulator(object):
                 # TODO: improve the randomness in the pv_power to be most pronounced at peak power e.g. use quadratic multiplier for random element
                 pv_power = -13033.3 + 2318.75 * x - \
                     82.29 * x**2 + random.uniform(-20, 20)
-        
+
         return pv_power
 
     def write_csv(self, filename, data_dict):

@@ -42,7 +42,8 @@ class Meter(object):
             pika.ConnectionParameters(host=host, port=port))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue="meter")
-        logger.info(f"Meter producer connected to RabbitMQ broker {host=}, {port=}")
+        logger.info(
+            f"Meter producer connected to RabbitMQ broker {host=}, {port=}")
 
     def run(self):
         """
@@ -55,10 +56,10 @@ class Meter(object):
                 meter_data = {"time": t, "val": meter_value}
 
                 self.channel.basic_publish(
-                    exchange="", 
-                    routing_key="meter", 
+                    exchange="",
+                    routing_key="meter",
                     body=json.dumps(meter_data)
-                    )
+                )
 
                 # Show and slow down the execution in debug mode to see the progress
                 logger.debug(f"Sent: {json.dumps(meter_data)}")
@@ -73,12 +74,12 @@ class Meter(object):
             logger.info("Meter value simulation complete")
             logger.debug("Sending end simulation message")
             self.channel.basic_publish(
-                exchange="", 
-                routing_key="meter", 
+                exchange="",
+                routing_key="meter",
                 body=json.dumps({}),
                 properties=pika.BasicProperties(
-                         delivery_mode = 2, # make message persistent
-                      ))
+                         delivery_mode=2,  # make message persistent
+                ))
             logger.debug("Closing RabbitMQ connection")
             self.connection.close()
 
