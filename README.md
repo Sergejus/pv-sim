@@ -32,19 +32,31 @@ Easiest way to run this is using `docker` and `docker-compose`.
 
 ### Run
 
-Build and start docker containers with the following command:
+Build required docker containers with the following command:
 
 ```bash
-docker-compose up -d --build
+docker-compose build
 ```
 
-You should see the containers start and run for a few seconds.
-Meter and PV Simulator containers will run and stop automatically once the simulation is done.
+Start the RabbitMQ container first:
+
+```bash
+docker-compose up -d rabbitmq
+```
+
+Wait a few seconds for RabbitMQ to fully load and then run the simulators:
+
+```bash
+docker-compose up -d meter_sim pv_sim
+```
+
+You should see the simulator containers start and run for a few seconds.
+Meter and PV Simulator containers will stop automatically once the simulation is done.
 
 This command shows which containers are still running:
 
 ```bash
-docker ps
+docker-compose ps
 ```
 
 Stop the remaining container (RabbitMQ container is still running after the simulation is complete)
@@ -61,7 +73,15 @@ Install Python 3.8.
 
 Install and run RabbitMQ server:
 
-[Install RabbitMQ](https://www.rabbitmq.com/install-debian.html)
+[Install and run RabbitMQ](https://www.rabbitmq.com/install-debian.html)
+
+Or run the RabbitMQ server from a docker using `docker-compose`:
+
+```bash
+docker-compose up -d rabbitmq
+```
+
+---
 
 It is a good practice to run the python project in virtualenv.
 
@@ -86,7 +106,7 @@ The only mandatory prerequisite for this project to work is `pika` library :)
 pip3 install -r requirements.txt
 ```
 
-Run `pv_simulator` consumer. It will start and wait for meter values. 
+Run `pv_simulator` consumer. It will start and wait for meter values.
 
 ```bash
 python3 pv/pv_simulator.py -s localhost -p 5672 -o data/results.csv
@@ -143,7 +163,7 @@ The pattern is a combination of multiple cyclic load patterns, from always on (f
 PV values from the example graph clearly show a slightly skewed production curve.
 The curve could be modeled as a normal distribution or a Weibull distribution.
 However, to reduce complexity and match the curve as closely as possible a quadratic model with two linear extensions is chosen.
- 
+
 ## Author
 
 **Sergejus Martinenas**
