@@ -1,0 +1,10 @@
+.vscode/*
+.history/
+
+*.log
+*.csv
+*.png
+*.pdf
+*.pyc
+
+venv/

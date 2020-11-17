@@ -1,0 +1,25 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+    - 5672:5672 # port for the daemon API
+    - 15672:15672 # port for the RabbitMQ management interface
+
+  meter_sim:
+    build: .
+    volumes:
+    - ./meter:/meter
+    command: python /meter/meter.py -s rabbitmq -p 5672
+    depends_on: 
+    - rabbitmq
+
+  pv_sim:
+    build: .
+    volumes:
+    - ./pv:/pv
+    - ./data:/data
+    command: python /pv/pv_simulator.py -s rabbitmq -p 5672 -o /data/results.csv
+    depends_on: 
+    - rabbitmq
