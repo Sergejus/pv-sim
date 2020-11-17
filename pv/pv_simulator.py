@@ -8,9 +8,9 @@ import csv
 import argparse
 import logging
 
-from time import sleep
 import random
 
+from time import sleep
 import datetime
 from datetime import timedelta, datetime as dt
 
@@ -90,15 +90,15 @@ class PVSimulator(object):
             self.write_csv(self.filename, result_dict)
 
     def run(self):
-
+        # Run PV simulator
         self.channel.basic_consume(
             queue="meter", on_message_callback=self.callback, auto_ack=True)
 
-        logger.debug("Waiting for messages...")
+        logger.debug("Waiting for meter values...")
         self.channel.start_consuming()
 
     def get_pv_power(self, timestamp):
-        # Function to generate the PV power value for the timestamp as input
+        # Function to generate the PV power value from the timestamp as input
         x = timestamp/3600
         pv_power = 0
 
@@ -109,18 +109,19 @@ class PVSimulator(object):
             elif x > EVENING_POINT:
                 pv_power = -531 * x + 11050
             else:
+                # TODO: improve the randomness in the pv_power to be most pronounced at peak power e.g. use quadratic multiplier for random element
                 pv_power = -13033.3 + 2318.75 * x - \
                     82.29 * x**2 + random.uniform(-20, 20)
         
         return pv_power
 
-    def write_csv(self, filename, data):
+    def write_csv(self, filename, data_dict):
         with open(filename, 'a', newline='') as csvfile:
             fieldnames = ['timestamp', 'meter_power', 'pv_power', 'sum_power']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             if csvfile.tell() == 0:
                 writer.writeheader()
-            writer.writerow(data)
+            writer.writerow(data_dict)
 
 
 if __name__ == "__main__":

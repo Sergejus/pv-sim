@@ -1,9 +1,12 @@
 #!/usr/bin/python
 
 import pika
-from time import sleep
+
 import random
+
+from time import sleep
 from datetime import datetime as dt
+
 import json
 import argparse
 import logging
@@ -52,7 +55,10 @@ class Meter(object):
                 meter_data = {"time": t, "val": meter_value}
 
                 self.channel.basic_publish(
-                    exchange="", routing_key="meter", body=json.dumps(meter_data))
+                    exchange="", 
+                    routing_key="meter", 
+                    body=json.dumps(meter_data)
+                    )
 
                 # Show and slow down the execution in debug mode to see the progress
                 logger.debug(f"Sent: {json.dumps(meter_data)}")
@@ -67,7 +73,12 @@ class Meter(object):
             logger.info("Meter value simulation complete")
             logger.debug("Sending end simulation message")
             self.channel.basic_publish(
-                exchange="", routing_key="meter", body=json.dumps({}))
+                exchange="", 
+                routing_key="meter", 
+                body=json.dumps({}),
+                properties=pika.BasicProperties(
+                         delivery_mode = 2, # make message persistent
+                      ))
             logger.debug("Closing RabbitMQ connection")
             self.connection.close()
 

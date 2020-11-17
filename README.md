@@ -1,8 +1,8 @@
 # PV Simulator
 
-PV simulator with meter simulator and rabbitmq message broker in between.
+PV simulator with meter simulator and RabbitMQ message broker in between.
 
-The simulator code is writen using python 3.8 (those debug f-strings are just too good not to use ;) )
+The simulator code is written using python 3.8 (those debug f-strings are just too good not to use ;) )
 
 ---
 
@@ -47,7 +47,7 @@ This command shows which containers are still running:
 docker ps
 ```
 
-Stop the remaining container (rabbitmq is still running after the simulation is complete)
+Stop the remaining container (RabbitMQ container is still running after the simulation is complete)
 
 ```bash
 docker-compose down
@@ -59,7 +59,7 @@ docker-compose down
 
 Install Python 3.8.
 
-Install and run rabbitmq server:
+Install and run RabbitMQ server:
 
 [Install RabbitMQ](https://www.rabbitmq.com/install-debian.html)
 
@@ -141,9 +141,9 @@ Meter values of the household consumption, in reality, are not completely random
 The pattern is a combination of multiple cyclic load patterns, from always on (fridge, AC, heater, etc.) and manually operated (stove/oven, kettle, lights, vacuum cleaner) appliances.
 
 PV values from the example graph clearly show a slightly skewed production curve.
-The curve could be modelled as a normal distribution or a Weibull distribution.
-However, to reduce complexity and match the curve as closely as possible a quadratic model with two linear is chosen.
-
+The curve could be modeled as a normal distribution or a Weibull distribution.
+However, to reduce complexity and match the curve as closely as possible a quadratic model with two linear extensions is chosen.
+ 
 ## Author
 
 **Sergejus Martinenas**
